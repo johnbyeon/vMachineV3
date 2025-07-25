@@ -8,10 +8,10 @@ import java.util.List;
 
 import Db.MysqlConnection;
 import Entity.User;
+import Enum.SearchType;
 
 public class UserDAO implements CrudInterface {
-    public static final int USER_ID = 1;
-    public static final int USER_NAME = 2;
+
 
     @Override
     public int insert(Object object) {
@@ -78,12 +78,12 @@ public class UserDAO implements CrudInterface {
                 " WHERE " + User.Column.NUM + " = ?";
         try {
             psmt = conn.prepareStatement(sql);
-            psmt.setString(1, cos.getPassword().toString());
+            psmt.setString(1, cos.getPassword());
             psmt.setString(2, cos.getName());
             psmt.setString(3, cos.getPhone());
             psmt.setInt(4, cos.getMainCardNum());
             psmt.setString(5, cos.getId());
-            psmt.setString(6, cos.getName());
+            psmt.setInt(6, cos.getNum());
             result = psmt.executeUpdate();
             psmt.close();
 
@@ -189,7 +189,7 @@ public class UserDAO implements CrudInterface {
             rs = psmt.executeQuery();
             while (rs.next()) {
                 cus = new User();
-                cus.setNum(rs.getInt(User.Column.NUM));
+                cus.setNum(num.intValue());
                 cus.setId(rs.getString(User.Column.ID));
                 cus.setPassword(rs.getString(User.Column.PASSWORD));
                 cus.setName(rs.getString(User.Column.NAME));
@@ -276,28 +276,29 @@ public class UserDAO implements CrudInterface {
     }
 
     @Override
-    public List<Object> searchKeyword(int num, String keyword) {
+    public List<Object> searchKeyword(int searchingNUM, String keyword) {
 
         List<Object> costomerDto = new ArrayList<>();
         Connection conn = MysqlConnection.getConnection();
         PreparedStatement psmt = null;
         ResultSet rs = null;
         String whereColumn = "";
-        switch (num) {
-            case UserDAO.USER_ID:
+        switch (searchingNUM) {
+            case SearchType.USER_ID:
                 whereColumn = User.Column.ID;
                 break;
-            case UserDAO.USER_NAME:
+            case SearchType.USER_NAME:
                 whereColumn = User.Column.NAME;
                 break;
         }
-        String sql = "SELECT " + User.Column.NUM + ", " +
+        String sql = "SELECT " + User.Column.ID + ", " +
                 User.Column.NUM + ", " +
                 User.Column.NAME + ", " +
                 User.Column.PHONE + ", " +
                 User.Column.MAINCARD + ", " +
                 User.Column.FIRST_DATE + ", " +
                 User.Column.LAST_DATE +
+                " FROM " +User.Table.TABLE_NAME +
                 " WHERE " + whereColumn + " like ?" +
                 " ORDER BY " + User.Column.NAME;
         try {

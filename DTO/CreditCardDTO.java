@@ -7,15 +7,15 @@ public class CreditCardDTO {
     private int num;
     private int cusNum;
     private int cardNum;
-    private int cardBalace;
+    private int cardBalance;
     private int firstDate;
     private int useStatus;
 
-    public CreditCardDTO(int num, int cusNum, int cardNum, int cardBalace, int firstDate, int useStatus) {
+    public CreditCardDTO(int num, int cusNum, int cardNum, int cardBalance, int firstDate, int useStatus) {
         this.num = num;
         this.cusNum = cusNum;
         this.cardNum = cardNum;
-        this.cardBalace = cardBalace;
+        this.cardBalance = cardBalance;
         this.firstDate = firstDate;
         this.useStatus = useStatus;
     }
@@ -54,8 +54,8 @@ public class CreditCardDTO {
         this.cusNum = cusNum;
     }
 
-    public void setCardBalace(int cardBalace) {
-        this.cardBalace = cardBalace;
+    public void setCardBalance(int cardBalance) {
+        this.cardBalance = cardBalance;
     }
 
     public void setFirstDate(int firstDate) {
@@ -77,8 +77,8 @@ public class CreditCardDTO {
         return cusNum;
     }
 
-    public int getCardBalace() {
-        return cardBalace;
+    public int getCardBalance() {
+        return cardBalance;
     }
 
     public int getFirstDate() {

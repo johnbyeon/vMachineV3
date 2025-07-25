@@ -1,4 +1,5 @@
 package DTO;
+
 import Entity.Product;
 
 import java.sql.Timestamp;
@@ -37,15 +38,28 @@ public class ProductDTO {
                 entity.getPrice()
         );
     }
-    public ProductDTO(){
+
+    public static ProductDTO makeDto(int num,
+                                     String name,
+                                     int displayCount,
+                                     Timestamp addTime,
+                                     Timestamp updateTime,
+                                     int inventoryCount,
+                                     int price) {
+
+        return new ProductDTO(num, name, displayCount, addTime, updateTime, inventoryCount, price);
     }
+
+    public ProductDTO() {
+    }
+
     public ProductDTO(int num,
                       String name,
                       int displayCount,
                       Timestamp addTime,
                       Timestamp updateTime,
                       int inventoryCount,
-                      int price){
+                      int price) {
         this.num = num;
         this.name = name;
         this.displayCount = displayCount;
@@ -82,6 +96,7 @@ public class ProductDTO {
     public void setPrice(int price) {
         this.price = price;
     }
+
     public int getPrice() {
         return price;
     }

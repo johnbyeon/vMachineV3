@@ -3,6 +3,7 @@ package view;
 import DTO.UserDTO;
 import Entity.User;
 import Entity.Product;
+import Service.MachineService;
 import view.consoleControl.ConsoleColor;
 import Service.AdminService;
 import view.consoleControl.ScreenCleaner;
@@ -11,28 +12,40 @@ import view.consoleControl.ScreenControl;
 import java.io.IOException;
 import java.util.List;
 
+import Enum.SearchType;
+import Enum.CrudType;
+
 public class AdminView {
-    public static final int NORMAL = 1;
-    public static final int UPDATE = 2;
     AdminService adminService = new AdminService();
+
     public int AllUserView(int mode) {
         //System.out.println("관리자가 모든 회원정보를 읽어옵니다.");
         List<User> userList = adminService.allUserFind();
-        return printCustomers(userList,mode);
+        return printCustomers(userList, mode);
     }
+    public int AllProductView(int mode) {
+        //System.out.println("관리자가 모든 회원정보를 읽어옵니다.");
+        MachineUserView muv = new MachineUserView();
+        List<Product> productList = adminService.allProductFined();
 
 
+        return printProducts(productList, mode);
+    }
+    public void createProductView(){
+        MachineUserView muv = new MachineUserView();
+        muv.createProductView("|                 상품 등록 페이지                    |");
+    }
     public void createUserView() {
         ScreenControl.ColorSetScreen(ConsoleColor.FONT_BLUE);
         SignUserView suv = new SignUserView();
-        suv.createUserView("         회원 등록         ");
+        suv.createUserView("|                    회원 등록                        |");
 
 
     }
 
 
     public void readUserView() {
-        while (true){
+        while (true) {
             ScreenControl.OpenScreen(ConsoleColor.FONT_BLUE);
             System.out.println("+-----------------------------------------------------+");
             System.out.println("|                     회원 관리                       |");
@@ -44,11 +57,11 @@ public class AdminView {
             System.out.printf("회원정보를 검색할 방법을 입력 : ");
             int num = ScanInput.scanInt();
             String name = "";
-            switch (num){
-                case 1:
+            switch (num) {
+                case SearchType.USER_ID:
                     name = "아이디를";
                     break;
-                case 2:
+                case SearchType.USER_NAME:
                     name = "이름을";
                     break;
                 case 3:
@@ -58,27 +71,27 @@ public class AdminView {
             }
             System.out.printf("검색할 " + name + " 입력하세요 : ");
             String keyword = ScanInput.scanStr();
-            List<User> userList = adminService.findKeyWord(num , keyword);
-            if(!userList.iterator().hasNext())
-            {
+            List<User> userList = adminService.findKeyWord(num, keyword);
+            if (!userList.iterator().hasNext()) {
                 System.out.println("데이터가 없습니다.");
                 ScreenControl.ColorReset();
                 try {
                     Thread.sleep(1500);
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("정지 화면 유지 실패");
                 }
                 return;
             }
-            printCustomers(userList,NORMAL);
+            printCustomers(userList, CrudType.NORMAL);
         }
 
 
     }
-    public int printProducts(List<Product> productList,int mode){
+
+    public int printProducts(List<Product> productList, int mode) {
         System.out.println("|  제품 번호  |  제품 이름  |  제품 갯수  | \t회원 전화번호\t | \t\t보유금액\t\t | \t\t\t가입 날짜\t\t\t | \t\t마지막 로그인\t\t |");
         for (Product product : productList) {
-            if(product.getDisplayCount() > 0)
+            if (product.getDisplayCount() > 0)
                 ScreenControl.ColorSetScreen(ConsoleColor.FONT_GREEN);
             else
                 ScreenControl.ColorSetScreen(ConsoleColor.FONT_RED);
@@ -100,18 +113,24 @@ public class AdminView {
             ScreenControl.ColorReset();
         }
 
-        switch (mode){
-            case UPDATE:
-                System.out.printf("변경할 회원번호를 입력하세요 : ");
+        switch (mode) {
+            case CrudType.UPDATE:
+                System.out.printf("변경할 제품번호를 입력하세요 : ");
                 ScreenControl.ColorReset();
                 int record = ScanInput.scanInt();
                 return record;
-            case NORMAL:
+            case CrudType.DELETE:
+                System.out.printf("삭제할 제품번호를 입력하세요 : ");
+                ScreenControl.ColorReset();
+                int record1 = ScanInput.scanInt();
+                return record1;
+            case CrudType.NORMAL:
                 System.out.printf("이전메뉴로 돌아가려면 엔터 입력 : ");
                 ScreenControl.ColorReset();
                 try {
                     System.in.read();
-                } catch (IOException e) { }
+                } catch (IOException e) {
+                }
                 return 0;
             default:
                 return 0;
@@ -119,7 +138,7 @@ public class AdminView {
     }
 
 
-    public int printCustomers(List<User> userList, int mode){
+    public int printCustomers(List<User> userList, int mode) {
         System.out.println("|  회원 번호  |  회원 아이디  |  회원 이름  | \t회원 전화번호\t | \t\t보유금액\t\t | \t\t\t가입 날짜\t\t\t | \t\t마지막 로그인\t\t |");
         for (User user : userList) {
             System.out.printf("|\t\t%3d  \t|" +
@@ -138,18 +157,24 @@ public class AdminView {
                     user.getLastDate().toString()
             );
         }
-        switch (mode){
-            case UPDATE:
+        switch (mode) {
+            case CrudType.UPDATE:
                 System.out.printf("변경할 회원번호를 입력하세요 : ");
                 ScreenControl.ColorReset();
                 int record = ScanInput.scanInt();
                 return record;
-            case NORMAL:
+            case CrudType.DELETE:
+                System.out.printf("삭제할 회원번호를 입력하세요 : ");
+                ScreenControl.ColorReset();
+                int record1 = ScanInput.scanInt();
+                return record1;
+            case CrudType.NORMAL:
                 System.out.printf("이전메뉴로 돌아가려면 엔터 입력 : ");
                 ScreenControl.ColorReset();
                 try {
                     System.in.read();
-                } catch (IOException e) { }
+                } catch (IOException e) {
+                }
                 return 0;
             default:
                 return 0;
@@ -159,7 +184,7 @@ public class AdminView {
 
     public void updateUserView() {
         ScreenControl.ColorSetScreen(ConsoleColor.FONT_YELLOW);
-        int record = AllUserView(UPDATE);
+        int record = AllUserView(CrudType.UPDATE);
         SignUserView suv = new SignUserView();
         User user = adminService.findUserNum(record);
         suv.updateUserView(UserDTO.fromEntity(user));
@@ -167,8 +192,25 @@ public class AdminView {
     }
 
     public void deletUserView() {
-        ScreenCleaner.ClrScreen();
-        System.out.println("관리자가 회원정보를 삭제합니다.");
+        ScreenControl.ColorSetScreen(ConsoleColor.FONT_CYAN);
+        int record = AllUserView(CrudType.DELETE);
+        SignUserView suv = new SignUserView();
+        User user = adminService.findUserNum(record);
+        if (user == null) {
+            System.out.println("데이터가 잘못되었습니다.");
+            try {
+                Thread.sleep(1500);
+            } catch (Exception e) {
+                System.out.println("정지 화면 유지 실패");
+            }
+        } else {
+            suv.deleteUserView(record);
+            try {
+                Thread.sleep(1500);
+            } catch (Exception e) {
+                System.out.println("정지 화면 유지 실패");
+            }
+        }
     }
 
     public void customerMainView() {
@@ -188,7 +230,7 @@ public class AdminView {
             int pageNum = ScanInput.scanInt();
             switch (pageNum) {
                 case 1:
-                    AllUserView(1);
+                    AllUserView(CrudType.NORMAL);
                     break;
                 case 2:
                     readUserView();
@@ -213,7 +255,7 @@ public class AdminView {
         ScreenControl.CLR();
         System.out.println("관리자가 모든 회원정보를 읽어옵니다.");
         List<Product> productList = adminService.allProductFined();
-        printProducts(productList,NORMAL);
+        printProducts(productList, CrudType.NORMAL);
     }
 
 
@@ -249,7 +291,7 @@ public class AdminView {
                     deleteProductView();
                     break;
                 case 6:
-                     return;
+                    return;
             }
         }
     }
@@ -262,8 +304,8 @@ public class AdminView {
 
     public void createProductView() {
         ScreenControl.OpenScreen(ConsoleColor.FONT_CYAN);
-        System.out.println("관리자가 제품을 생성합니다.");
-
+        MachineUserView muv = new MachineUserView();
+        muv.
 
     }
 

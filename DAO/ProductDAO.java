@@ -2,6 +2,7 @@ package DAO;
 
 import DTO.ProductDTO;
 import Db.MysqlConnection;
+import Entity.Product;
 import Entity.User;
 
 import java.sql.Connection;
@@ -15,7 +16,7 @@ public class ProductDAO implements CrudInterface {
     @Override
     public int insert(Object object) {
         // 결과를 돌려줄 변수
-        ProductDTO cos = (ProductDTO)object;
+        ProductDTO cos = (ProductDTO) object;
         int result = 0;
 
         Connection conn = MysqlConnection.getConnection();
@@ -24,10 +25,11 @@ public class ProductDAO implements CrudInterface {
         // 쿼리 작성
         String sql;
 
-        sql = "INSERT INTO prodcut(product_name, " +
-                "product_display_count, " +
-                "product_inventory_count, " +
-                "product_price) " +
+        sql = "INSERT INTO " + Product.Table.TABLE_NAME + "(" +
+                Product.Column.NAME + ", " +
+                Product.Column.DISPLAY_COUNT + ", " +
+                Product.Column.INVENTORY_COUNT + ", " +
+                Product.Column.PRICE + ") " +
                 " VALUES (?,?,?,?)";
         try {
             psmt = conn.prepareStatement(sql);
@@ -66,27 +68,27 @@ public class ProductDAO implements CrudInterface {
         PreparedStatement psmt = null;
         ResultSet rs = null;
 
-        String sql = "SELECT product_num, " +
-                " product_name, " +
-                " product_display_count, " +
-                " product_adding_time, " +
-                " product_update_time, " +
-                " product_inventory_count," +
-                " product_price " +
-                " FROM product ORDER BY product_name";
+        String sql = "SELECT " + Product.Column.NUM + ", " +
+                Product.Column.NAME + ", " +
+                Product.Column.DISPLAY_COUNT + ", " +
+                Product.Column.ADD_TIME + ", " +
+                Product.Column.UPDATE_TIME + ", " +
+                Product.Column.INVENTORY_COUNT + ", " +
+                Product.Column.PRICE +
+                " FROM " + Product.Table.TABLE_NAME + " ORDER BY " + Product.Column.NAME;
         try {
             psmt = conn.prepareStatement(sql);
             rs = psmt.executeQuery();
 
             while (rs.next()) {
                 ProductDTO productDTO = new ProductDTO();
-                productDTO.setNum(rs.getInt("product_num"));
-                productDTO.setName(rs.getString("product_name"));
-                productDTO.setDisplayCount(rs.getInt("product_display_count"));
-                productDTO.setAddTime(rs.getTimestamp("product_adding_time"));
-                productDTO.setUpdateTime(rs.getTimestamp("product_update_time"));
-                productDTO.setInventoryCount(rs.getInt("product_inventory_count"));
-                productDTO.setPrice(rs.getInt("product_price"));
+                productDTO.setNum(rs.getInt(Product.Column.NUM));
+                productDTO.setName(rs.getString(Product.Column.NAME));
+                productDTO.setDisplayCount(rs.getInt(Product.Column.DISPLAY_COUNT));
+                productDTO.setAddTime(rs.getTimestamp(Product.Column.ADD_TIME));
+                productDTO.setUpdateTime(rs.getTimestamp(Product.Column.UPDATE_TIME));
+                productDTO.setInventoryCount(rs.getInt(Product.Column.INVENTORY_COUNT));
+                productDTO.setPrice(rs.getInt(Product.Column.PRICE));
                 productDTOList.add(productDTO);
             }
             rs.close();
@@ -105,8 +107,9 @@ public class ProductDAO implements CrudInterface {
         PreparedStatement psmt = null;
         ResultSet rs = null;
 
-        String sql = "SELECT * FROM User WHERE cus_num = ?";
-        User user = null;
+        String sql = "SELECT * FROM " + Product.Table.TABLE_NAME +
+                " WHERE " + Product.Column.NUM + " = ?";
+        Product product = null;
 
         try {
             psmt = conn.prepareStatement(sql);
@@ -115,22 +118,21 @@ public class ProductDAO implements CrudInterface {
             rs = psmt.executeQuery();
             // 갖고온 데이터를 TelBook에 담아서 리턴
             while (rs.next()) {
-                user = new User();
-                user.setNum(rs.getInt("cus_num"));
-                user.setId(rs.getString("cus_id"));
-                user.setPassword(rs.getString("cus_password"));
-                user.setName(rs.getString("cus_name"));
-                user.setPhone(rs.getString("cus_phone"));
-                user.setMainCardNum(rs.getInt("cus_main_card_num"));
-                user.setFirstDate(rs.getTimestamp("cus_first_date"));
-                user.setLastDate(rs.getTimestamp("cus_last_date"));
+                product = new Product();
+                product.setNum(rs.getInt(Product.Column.NUM));
+                product.setName(rs.getString(Product.Column.NAME));
+                product.setPrice(rs.getInt(Product.Column.PRICE));
+                product.setAddTime(rs.getTimestamp(Product.Column.ADD_TIME));
+                product.setUpdateTime(rs.getTimestamp(Product.Column.UPDATE_TIME));
+                product.setDisplayCount(rs.getInt(Product.Column.DISPLAY_COUNT));
+                product.setInventoryCount(rs.getInt(Product.Column.INVENTORY_COUNT));
             }
             rs.close();
             psmt.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return book;
+        return product;
     }
 
     @Override

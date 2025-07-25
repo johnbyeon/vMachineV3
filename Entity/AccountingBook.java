@@ -3,6 +3,19 @@ package Entity;
 import java.sql.Timestamp;
 
 public class AccountingBook {
+    public class Table{
+        public static final String TABLE_NAME = "accounting_book";
+    }
+    public class Column{
+        public static final String NUM = "acnt_num";
+        public static final String USER_NUM = "acnt_cus_num";
+        public static final String PAYMENT_NUM = "acnt_pay_num";
+        public static final String PRODUCT_NUM = "acnt_product_num";
+        public static final String PRODUCT_COUNT = "acnt_product_count";
+    }
+
+
+
     private int num;
     private int cusNum;
     private int payNum;

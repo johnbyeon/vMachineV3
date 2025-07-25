@@ -27,6 +27,17 @@ public class SignUserService {
             System.out.println("저장에 실패했습니다.");
         }
     }
+
+    public void delete(int userNum) {
+//		System.out.println("데이터 입력 처리 서비스");
+
+        int result = customerDAO.delete(Long.valueOf(userNum));
+        if(result > 0) {
+            System.out.println("유저가 성공적으로 삭제 되었습니다.");
+        } else {
+            System.out.println("유저 삭제에 실패했습니다.");
+        }
+    }
     public UserDTO searchId(String id) {
 //		System.out.println("아이디 검색 처리화면 서비스");
         User user = (User)(customerDAO.getOne(id));

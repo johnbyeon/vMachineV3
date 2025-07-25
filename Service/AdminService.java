@@ -63,5 +63,10 @@ public class AdminService {
         else
         return (User)object;
     }
+    public int deleteUser(int userNum){
+       int result = userDAO.delete(Long.valueOf(userNum));
 
+
+        return result;
+    }
 }

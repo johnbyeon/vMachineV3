@@ -2,13 +2,14 @@ package Service;
 
 import DAO.CrudInterface;
 import DAO.ProductDAO;
+import DTO.ProductDTO;
 import DTO.UserDTO;
 
 public class MachineService {
     CrudInterface dao = new ProductDAO();
-    public void input(UserDTO dto) {
+    public void input(ProductDTO dto) {
 //		System.out.println("데이터 입력 처리 서비스");
-        int result = dao.insert(UserDTO.fromDto(dto));
+        int result = dao.insert(ProductDTO.fromDto(dto));
         if(result > 0) {
             System.out.println("저장되었습니다.");
         } else {

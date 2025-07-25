@@ -22,7 +22,7 @@ public class SignUserView {
 
     private String checkName() {
         boolean checkName = true;
-        String name = "";
+        String name = null;
         do {
             try {
                 System.out.println("이름을 입력하세요 (15자내외)");
@@ -40,7 +40,7 @@ public class SignUserView {
 
     private String checkPhone() {
         boolean check = true;
-        String phone = "";
+        String phone = null;
         do {
             try {
                 System.out.println("전화번호를 입력하세요 : ");
@@ -115,7 +115,7 @@ public class SignUserView {
     public void createUserView(String keyword) {
         ScreenControl.CLR();
         System.out.println("+-----------------------------------------------------+");
-        System.out.println("|            " + keyword + "              |");
+        System.out.println(keyword);
         System.out.println("+-----------------------------------------------------+");
         String userId = checkUser();
         if (userId == null) return;
@@ -169,35 +169,63 @@ public class SignUserView {
         String password = userDTO.getPassword();
         String name;
         String phone;
+        boolean isChange = false;
+
         int cardNum = userDTO.getMainCardNum();
-        if (reNew("이름 : " + userDTO.getId()) == true) {
+        if (reNew("아이디 : " + userDTO.getId()) == true) {
             while (true) {
                 userId = checkUser();
-                if (userId != null) break;
+                if (userId != null) {
+                    isChange = true;
+                    break;
+                }
             }
         } else {
-            userId = userDTO.getName();
+            userId = userDTO.getId();
         }
         if (reNew("이름 : " + userDTO.getName())) {
-            name = checkName();
+            while (true){
+                name = checkName();
+                if (name != null) {
+                    isChange = true;
+                    break;
+                }
+            }
         } else {
             name = userDTO.getName();
         }
         if (reNew("전화번호 : " + userDTO.getPhone())) {
-            phone = checkPhone();
+            while (true){
+                phone = checkPhone();
+                if (phone != null) {
+                    isChange = true;
+                    break;
+                }
+            }
         } else {
             phone = userDTO.getPhone();
         }
         ScreenControl.ColorReset();
-        signUserService.update(UserDTO
-                .makeDto(userDTO.getNum(), userId, password, name, phone, cardNum , userDTO.getFirstDate(),userDTO.getLastDate()));
+        if (isChange == true){
+            signUserService.update(UserDTO
+                    .makeDto(userDTO.getNum(), userId, password, name, phone, cardNum , userDTO.getFirstDate(),userDTO.getLastDate()));
+
+        }else {
+            System.out.println("변경된 내용이 없어서 처음으로 돌아갑니다.");
+
+        }
+        try {
+            Thread.sleep(1500);
+        }catch (Exception e){
+            System.out.println("정지 화면 유지 실패");
+        }
 
 
     }
 
-    public void deleteUserView() {
+    public void deleteUserView(int record) {
         ScreenControl.CLR();
-        System.out.println("회원정보를 삭제합니다.");
+        signUserService.delete(record);
     }
 
 }

@@ -3,7 +3,10 @@ package Entity;
 import java.sql.Timestamp;
 
 public class Product {
-    public class column{
+    public class Table{
+        public static final String TABLE_NAME = "product";
+    }
+    public class Column{
         public static final String NUM = "product_num";
         public static final String NAME = "product_name";
         public static final String DISPLAY_COUNT = "product_display_count";

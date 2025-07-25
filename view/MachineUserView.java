@@ -1,6 +1,11 @@
 package view;
 
+import java.sql.Timestamp;
 import java.util.Scanner;
+
+import DTO.ProductDTO;
+import DTO.UserDTO;
+import Service.MachineService;
 import view.consoleControl.ConsoleColor;
 import Enum.UserType;
 import view.consoleControl.ScreenCleaner;
@@ -9,6 +14,8 @@ import view.consoleControl.ScreenControl;
 public class MachineUserView {
     private static Scanner sc = new Scanner(System.in);
     private  ConsoleColor cc = new ConsoleColor(ConsoleColor.FONT_PURPLE,ConsoleColor.BACKGROUND_BLACK);
+   MachineService machineService = new MachineService();
+
     public void viewMain() {
 
         boolean validInput = true;
@@ -27,7 +34,7 @@ public class MachineUserView {
             int menu = ScanInput.scanInt();
             switch (menu) {
                 case 1:
-                    suv.createUserView("회원 가입 양식을 입력하세요");
+                    suv.createUserView("|           회원가입 양식을 입력하세요                |");
                     break;
                 case 2:
                     ScreenControl.OpenScreen(ConsoleColor.FONT_YELLOW);
@@ -46,6 +53,24 @@ public class MachineUserView {
         }
 
     }
+    public void createProductView(String keyword) {
+        ScreenControl.CLR();
+        System.out.println("+-----------------------------------------------------+");
+        System.out.println(keyword);
+        System.out.println("+-----------------------------------------------------+");
+        System.out.print("제품 이름을 입력하세요 : ");
+        String name = ScanInput.scanStr();
+        System.out.print("판매 갯수를 입력하세요 : ");
+        int displayCount = ScanInput.scanInt();
+        System.out.print("재고 갯수를 입력하세요 : ");
+        int inventoryCount = ScanInput.scanInt();
+        System.out.print("판매 가격을 입력하세요 : ");
+        int price = ScanInput.scanInt();
+        Timestamp nowTimestamp = new Timestamp(System.currentTimeMillis());
+        machineService.input(ProductDTO
+                .makeDto(0, name ,displayCount,nowTimestamp,nowTimestamp,inventoryCount,price));
+    }
+
     public void viewProduct(){
         while (true){
             int money = 1000000;
